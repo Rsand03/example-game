@@ -4,7 +4,7 @@ apply plugin: 'application'
 java.sourceCompatibility = 21
 java.targetCompatibility = 21
 if (JavaVersion.current().isJava9Compatible()) {
-        compileJava.options.release.set(21)
+  compileJava.options.release.set(21)
 }
 
 mainClassName = 'ee.taltech.examplegame.server.ServerLauncher'
@@ -13,6 +13,11 @@ eclipse.project.name = appName + '-server'
 
 dependencies {
   implementation project(':shared')
+  implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
+  
+  // you must enable annotation processing in intellij settings.
+  compileOnly 'org.projectlombok:lombok:1.18.36'
+  annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 jar {
