@@ -3,9 +3,14 @@ eclipse.project.name = appName + '-core'
 
 dependencies {
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
   api project(':shared')
 
-  if(enableGraalNative == 'true') {
+  if (enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+
+  implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
 }

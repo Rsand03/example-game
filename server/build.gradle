@@ -14,7 +14,8 @@ eclipse.project.name = appName + '-server'
 dependencies {
   implementation project(':shared')
   implementation group: 'com.esotericsoftware', name: 'kryonet', version: '2.22.0-RC1'
-  
+  implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
+
   // you must enable annotation processing in intellij settings.
   compileOnly 'org.projectlombok:lombok:1.18.36'
   annotationProcessor 'org.projectlombok:lombok:1.18.36'
