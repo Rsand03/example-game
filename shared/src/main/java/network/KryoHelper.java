@@ -2,6 +2,8 @@ package network;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import java.util.ArrayList;
+
 public class KryoHelper {
 
     public static void registerClasses(Kryo kryo) {
@@ -11,6 +13,7 @@ public class KryoHelper {
         kryo.register(message.GameJoinMessage.class);
         kryo.register(message.PlayerMovementMessage.class);
         kryo.register(message.Direction.class);
+        kryo.register(ArrayList.class);
         kryo.register(message.GameStateMessage.class);
         kryo.register(message.PlayerState.class);
     }

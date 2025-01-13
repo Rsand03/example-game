@@ -60,9 +60,13 @@ public class ServerListener extends Listener {
         // when a GameJoin message is received, the server will add the
         // connection to a game instance
         if (object instanceof GameJoinMessage) {
-            game.addConnection(connection);
-            if (!game.isGameRunning()) {
+            if (game == null) {
                 game = new Game();
+            }
+
+            game.addConnection(connection);
+
+            if (!game.isGameRunning()) {
                 game.start();
             }
         }

@@ -30,9 +30,7 @@ public class Game extends Thread {
     }
 
     @Override
-    public void start() {
-        super.start();
-
+    public void run() {
         isGameRunning = true;
 
         while (isGameRunning) {

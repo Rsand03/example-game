@@ -6,6 +6,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import ee.taltech.examplegame.network.ServerConnection;
+import message.GameJoinMessage;
 
 import static ee.taltech.examplegame.component.Button.getButton;
 
@@ -21,11 +23,11 @@ public class TitleScreen extends ScreenAdapter {
 
         // menu buttons
         var startButton = getButton(20, "Start", () -> {
+            // send a message to the server that the player wants to join the game
+            ServerConnection.getInstance().getClient().sendTCP(new GameJoinMessage());
             game.setScreen(new GameScreen(game));
         });
-        var exitButton = getButton(20, "Exit", () -> {
-            Gdx.app.exit();
-        });
+        var exitButton = getButton(20, "Exit", () -> Gdx.app.exit());
 
         // positioning the buttons. you can think of the following as a table (or flexbox) in HTML
         var table = new Table();

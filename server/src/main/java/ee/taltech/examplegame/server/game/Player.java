@@ -22,6 +22,8 @@ public class Player {
     }
 
     public void move(message.Direction direction) {
+        if (direction == null) return;
+
         switch (direction) {
             case UP -> y += 1 * PLAYER_SPEED;
             case DOWN -> y -= 1 * PLAYER_SPEED;

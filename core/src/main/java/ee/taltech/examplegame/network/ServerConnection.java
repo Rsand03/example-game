@@ -39,4 +39,8 @@ public class ServerConnection {
             Gdx.app.error("ServerConnection", "Failed to connect to server", e);
         }
     }
+
+    public Client getClient() {
+        return client;
+    }
 }
