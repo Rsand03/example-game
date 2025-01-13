@@ -27,6 +27,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         input.handleMovementInput();
+        input.handleShootingInput();
 
         spriteBatch.begin();
         arena.render(delta, spriteBatch);

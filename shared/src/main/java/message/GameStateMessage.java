@@ -7,4 +7,5 @@ import java.util.List;
 @Data
 public class GameStateMessage {
     private List<PlayerState> playerStates;
+    private List<BulletState> bulletStates;
 }

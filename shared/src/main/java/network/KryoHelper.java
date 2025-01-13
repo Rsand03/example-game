@@ -1,6 +1,7 @@
 package network;
 
 import com.esotericsoftware.kryo.Kryo;
+import message.PlayerShootingMessage;
 
 import java.util.ArrayList;
 
@@ -16,5 +17,7 @@ public class KryoHelper {
         kryo.register(ArrayList.class);
         kryo.register(message.GameStateMessage.class);
         kryo.register(message.PlayerState.class);
+        kryo.register(message.BulletState.class);
+        kryo.register(PlayerShootingMessage.class);
     }
 }

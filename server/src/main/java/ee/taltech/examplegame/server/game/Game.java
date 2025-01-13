@@ -3,6 +3,7 @@ package ee.taltech.examplegame.server.game;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import lombok.Getter;
+import message.BulletState;
 import message.GameStateMessage;
 import message.PlayerState;
 
@@ -15,11 +16,16 @@ import static constant.Constants.GAME_TICK_RATE;
 public class Game extends Thread {
     private final List<Connection> connections = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
+    private final List<Bullet> bullets = new ArrayList<>();
     @Getter
     private boolean isGameRunning = false;
 
+    public void addBullet(Bullet bullet) {
+        this.bullets.add(bullet);
+    }
+
     public void addConnection(Connection connection) {
-        var player = new Player(connection);
+        var player = new Player(connection, this);
 
         this.players.add(player);
         this.connections.add(connection);
@@ -34,11 +40,22 @@ public class Game extends Thread {
         isGameRunning = true;
 
         while (isGameRunning) {
+            // update bullets and remove them if they are not near the players
+            bullets.forEach(bullet -> {
+                bullet.update();
+                // TODO removing bullets that are out of bounds
+            });
+
             // get the state of all players
             var playerStates = new ArrayList<PlayerState>();
             players.forEach(player -> playerStates.add(player.getState()));
+            // get state of all bullets
+            var bulletStates = new ArrayList<BulletState>();
+            bullets.forEach(bullet -> bulletStates.add(bullet.getState()));
+
             var gameStateMessage = new GameStateMessage();
             gameStateMessage.setPlayerStates(playerStates);
+            gameStateMessage.setBulletStates(bulletStates);
 
             // send the state of all players to all clients
             connections.forEach(connection -> connection.sendUDP(gameStateMessage));
