@@ -17,4 +17,10 @@ public class Constants {
     // --- game constants ---
     public static final int GAME_TICK_RATE = 60;
 
+
+    public static final int ARENA_LOWER_BOUND_X = 0;
+    public static final int ARENA_UPPER_BOUND_X = 680;
+    public static final int ARENA_UPPER_BOUND_Y = 440;
+    public static final int ARENA_LOWER_BOUND_Y = 1;
+
 }

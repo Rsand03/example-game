@@ -13,11 +13,13 @@ public class Bullet {
     private final Direction direction;
     private float x;
     private float y;
+    private int shotById;
 
-    public Bullet(float x, float y, Direction direction) {
+    public Bullet(float x, float y, Direction direction, int shotByPlayerWithId) {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.shotById = shotByPlayerWithId;
     }
 
     public void update() {

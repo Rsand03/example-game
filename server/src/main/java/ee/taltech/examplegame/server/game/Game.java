@@ -16,7 +16,8 @@ import static constant.Constants.GAME_TICK_RATE;
 public class Game extends Thread {
     private final List<Connection> connections = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
-    private final List<Bullet> bullets = new ArrayList<>();
+    private List<Bullet> bullets = new ArrayList<>();
+    private final BulletCollisionManager collisionManager = new BulletCollisionManager();
     @Getter
     private boolean isGameRunning = false;
 
@@ -41,14 +42,13 @@ public class Game extends Thread {
 
         while (isGameRunning) {
             // update bullets and remove them if they are not near the players
-            bullets.forEach(bullet -> {
-                bullet.update();
-                // TODO removing bullets that are out of bounds
-            });
+            bullets.forEach(Bullet::update);
+            bullets = collisionManager.handleCollisions(bullets, players);
 
             // get the state of all players
             var playerStates = new ArrayList<PlayerState>();
             players.forEach(player -> playerStates.add(player.getState()));
+
             // get state of all bullets
             var bulletStates = new ArrayList<BulletState>();
             bullets.forEach(bullet -> bulletStates.add(bullet.getState()));
