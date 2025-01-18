@@ -1,5 +1,7 @@
 package ee.taltech.examplegame.server.game;
 
+import com.esotericsoftware.minlog.Log;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +22,28 @@ public class BulletCollisionManager {
         for (Player player : players) {
             Rectangle hitBox = constructPlayerHitBox(player);
             for (Bullet bullet : bullets) {
+                // register a hit only if the bullet was shot by a different player
                 if (bullet.getShotById() != player.getId() && hitBox.contains(bullet.getX(), bullet.getY())) {
                     player.decreaseLives();
                     bulletsToBeRemoved.add(bullet);
+                    Log.info("Player with id " + player.getId() + " was hit. " + player.getLives() + " lives left.");
                 }
             }
         }
         bulletsToBeRemoved.addAll(findOutOfBoundsBullets(bullets));
-        bullets.removeAll(bulletsToBeRemoved);
+        bullets.removeAll(bulletsToBeRemoved);  // remove bullets that hit a player or move out of bounds
         return bullets;
     }
 
     private List<Bullet> findOutOfBoundsBullets(List<Bullet> bullets) {
         List<Bullet> outOfBoundsBullets = new ArrayList<>();
-        for (Bullet b : bullets) {
-            if (b.getX() < ARENA_LOWER_BOUND_X || b.getX() > ARENA_UPPER_BOUND_X ||
-                b.getY() < ARENA_LOWER_BOUND_Y || b.getY() > ARENA_UPPER_BOUND_Y) {
-                outOfBoundsBullets.add(b);
+        for (Bullet bullet : bullets) {
+            if (bullet.getX() < ARENA_LOWER_BOUND_X ||
+                bullet.getX() > ARENA_UPPER_BOUND_X ||
+                bullet.getY() < ARENA_LOWER_BOUND_Y ||
+                bullet.getY() > ARENA_UPPER_BOUND_Y
+            ) {
+                outOfBoundsBullets.add(bullet);
             }
         }
         return outOfBoundsBullets;
@@ -45,10 +52,10 @@ public class BulletCollisionManager {
     private Rectangle constructPlayerHitBox(Player player) {
         return
             new Rectangle(
-                (int) (player.getX()),
-                (int) (player.getY()),
-                (int) PLAYER_WIDTH_IN_PIXELS,
-                (int) PLAYER_HEIGHT_IN_PIXELS
+                (int) (player.getX()),  // bottom left corner coordinates
+                (int) (player.getY()),  // bottom left corner coordinates
+                (int) PLAYER_WIDTH_IN_PIXELS,  // rectangle width
+                (int) PLAYER_HEIGHT_IN_PIXELS  // rectangle height
             );
     }
 
