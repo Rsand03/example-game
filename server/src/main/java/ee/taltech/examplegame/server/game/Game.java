@@ -14,11 +14,14 @@ import java.util.List;
 import static constant.Constants.GAME_TICK_RATE;
 
 public class Game extends Thread {
+
+    private final BulletCollisionManager collisionManager = new BulletCollisionManager();
     private final List<Connection> connections = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
-    private final List<Bullet> bullets = new ArrayList<>();
+    private List<Bullet> bullets = new ArrayList<>();
     @Getter
     private boolean isGameRunning = false;
+
 
     public void addBullet(Bullet bullet) {
         this.bullets.add(bullet);
@@ -40,15 +43,14 @@ public class Game extends Thread {
         isGameRunning = true;
 
         while (isGameRunning) {
-            // update bullets and remove them if they are not near the players
-            bullets.forEach(bullet -> {
-                bullet.update();
-                // TODO removing bullets that are out of bounds
-            });
+            // update bullets, check for collisions and remove out of bounds bullets
+            bullets.forEach(Bullet::update);
+            bullets = collisionManager.handleCollisions(bullets, players);
 
             // get the state of all players
             var playerStates = new ArrayList<PlayerState>();
             players.forEach(player -> playerStates.add(player.getState()));
+
             // get state of all bullets
             var bulletStates = new ArrayList<BulletState>();
             bullets.forEach(bullet -> bulletStates.add(bullet.getState()));
