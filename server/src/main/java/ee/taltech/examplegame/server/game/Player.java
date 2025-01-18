@@ -36,6 +36,11 @@ public class Player {
             case LEFT -> x -= 1 * PLAYER_SPEED;
             case RIGHT -> x += 1 * PLAYER_SPEED;
         }
+
+        // enforce arena bounds
+        x = Math.max(ARENA_LOWER_BOUND_X, Math.min(x, ARENA_UPPER_BOUND_X - PLAYER_WIDTH_IN_PIXELS));
+        y = Math.max(ARENA_LOWER_BOUND_Y, Math.min(y, ARENA_UPPER_BOUND_Y - PLAYER_HEIGHT_IN_PIXELS));
+
     }
 
     public PlayerState getState() {
