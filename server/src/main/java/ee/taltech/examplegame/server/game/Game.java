@@ -15,12 +15,16 @@ import static constant.Constants.GAME_TICK_RATE;
 
 public class Game extends Thread {
 
+    private static final int LOBBY_SIZE = 2;  // TODO set when creating a new game
+
     private final BulletCollisionManager collisionManager = new BulletCollisionManager();
     private final List<Connection> connections = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
     private List<Bullet> bullets = new ArrayList<>();
     @Getter
     private boolean isGameRunning = false;
+    private boolean allPlayersHaveJoined = false;
+    private float gameTime = 0;
 
 
     public void addBullet(Bullet bullet) {
@@ -32,6 +36,10 @@ public class Game extends Thread {
 
         this.players.add(player);
         this.connections.add(connection);
+
+        if (connections.size() == LOBBY_SIZE) {
+            allPlayersHaveJoined = true;
+        }
     }
 
     public void removeConnection(Connection connection) {
@@ -43,6 +51,9 @@ public class Game extends Thread {
         isGameRunning = true;
 
         while (isGameRunning) {
+            if (allPlayersHaveJoined) {
+                gameTime += 1f / GAME_TICK_RATE;
+            }
             // update bullets, check for collisions and remove out of bounds bullets
             bullets.forEach(Bullet::update);
             bullets = collisionManager.handleCollisions(bullets, players);
@@ -58,6 +69,8 @@ public class Game extends Thread {
             var gameStateMessage = new GameStateMessage();
             gameStateMessage.setPlayerStates(playerStates);
             gameStateMessage.setBulletStates(bulletStates);
+            gameStateMessage.setGameTime(Math.round(gameTime));
+            gameStateMessage.setAllPlayersHaveJoined(allPlayersHaveJoined);
 
             // send the state of all players to all clients
             connections.forEach(connection -> connection.sendUDP(gameStateMessage));
