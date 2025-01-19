@@ -6,12 +6,14 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ee.taltech.examplegame.game.Arena;
-import ee.taltech.examplegame.game.InputManager;
 import ee.taltech.examplegame.game.GameStateManager;
+import ee.taltech.examplegame.game.InputManager;
 import ee.taltech.examplegame.screen.overlay.Hud;
 import message.GameStateMessage;
 
 public class GameScreen extends ScreenAdapter {
+
+    private final Game game;
 
     private final GameStateManager gameStateManager;
     private final Arena arena;
@@ -21,6 +23,7 @@ public class GameScreen extends ScreenAdapter {
 
 
     public GameScreen(Game game) {
+        this.game = game;
         gameStateManager = new GameStateManager();
         inputManager = new InputManager();
 
@@ -38,6 +41,7 @@ public class GameScreen extends ScreenAdapter {
 
         inputManager.handleMovementInput();
         inputManager.handleShootingInput();
+        inputManager.handleNavigationInput(game); // ESC - navigate back to Title screen
 
         // update time, lives, positions of the players etc
         GameStateMessage currentGameState = gameStateManager.getLatestGameStateMessage();

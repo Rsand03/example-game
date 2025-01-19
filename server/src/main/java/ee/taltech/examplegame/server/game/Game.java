@@ -2,6 +2,7 @@ package ee.taltech.examplegame.server.game;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
+import ee.taltech.examplegame.server.listener.ServerListener;
 import lombok.Getter;
 import message.BulletState;
 import message.GameStateMessage;
@@ -12,12 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static constant.Constants.GAME_TICK_RATE;
+import static constant.Constants.PLAYER_COUNT_IN_GAME;
 
 public class Game extends Thread {
 
-    private static final int LOBBY_SIZE = 2;  // TODO set when creating a new game
-
+    private final ServerListener server;
     private final BulletCollisionHandler collisionHandler = new BulletCollisionHandler();
+
     private final List<Connection> connections = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
     private List<Bullet> bullets = new ArrayList<>();
@@ -27,17 +29,32 @@ public class Game extends Thread {
     private float gameTime = 0;
 
 
+    public Game(ServerListener server) {
+        this.server = server;
+    }
+
+
     public void addBullet(Bullet bullet) {
         this.bullets.add(bullet);
     }
 
+    public boolean hasEnoughPlayers() {
+        return connections.size() == PLAYER_COUNT_IN_GAME;
+    }
+
     public void addConnection(Connection connection) {
-        var player = new Player(connection, this);
+        if (hasEnoughPlayers()) {
+            Log.info("Cannot add connection: Required number of players already connected.");
+            return;
+        }
 
-        this.players.add(player);
-        this.connections.add(connection);
+        // Add new player and connection
+        Player newPlayer = new Player(connection, this);
+        players.add(newPlayer);
+        connections.add(connection);
 
-        if (connections.size() == LOBBY_SIZE) {
+        // Check if the game is ready to start
+        if (hasEnoughPlayers()) {
             allPlayersHaveJoined = true;
         }
     }
@@ -54,6 +71,7 @@ public class Game extends Thread {
             if (allPlayersHaveJoined) {
                 gameTime += 1f / GAME_TICK_RATE;
             }
+
             // update bullets, check for collisions and remove out of bounds bullets
             bullets.forEach(Bullet::update);
             bullets = collisionHandler.handleCollisions(bullets, players);
@@ -75,14 +93,24 @@ public class Game extends Thread {
             // send the state of all players to all clients
             connections.forEach(connection -> connection.sendUDP(gameStateMessage));
 
-            // if no players are connected, stop the game loop
+            // If a player is dead, end the game
+            if (players.stream().anyMatch(x -> x.getLives() == 0)) {
+                // Use TCP to ensure that the last gameStateMessage reaches all clients
+                connections.forEach(connection -> connection.sendTCP(gameStateMessage));
+                players.forEach(Player::dispose); // remove movement and shooting listeners
+                connections.clear();
+                server.disposeGame();
+                isGameRunning = false;
+            }
+
+            // If no players are connected, stop the game loop
             if (connections.isEmpty()) {
                 Log.info("No players connected, stopping game loop.");
                 isGameRunning = false;
             }
 
             try {
-                // we don't want to update the game state every millisecond that would be
+                // We don't want to update the game state every millisecond, that would be
                 // too much for the server to handle. So a tick rate is used to limit the
                 // amount of updates per second.
                 Thread.sleep(Duration.ofMillis(1000 / GAME_TICK_RATE));

@@ -1,32 +1,38 @@
 package ee.taltech.examplegame.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import ee.taltech.examplegame.network.ServerConnection;
+import ee.taltech.examplegame.screen.TitleScreen;
 import message.Direction;
 import message.PlayerMovementMessage;
 import message.PlayerShootingMessage;
 
 public class InputManager {
 
+    public void handleNavigationInput(Game game) {
+        // navigate to TitleScreen
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new TitleScreen(game));
+        }
+    }
+
     public void handleMovementInput() {
         var movementMessage = new PlayerMovementMessage();
 
-        // detect key presses and send movement message to the server
+        // detect key presses and send a movement message with the desired direction to the server
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A)) {
-            // send movement message to the server
             movementMessage.setDirection(Direction.LEFT);
         } else if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D)) {
-            // send movement message to the server
             movementMessage.setDirection(Direction.RIGHT);
         } else if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W)) {
-            // send movement message to the server
             movementMessage.setDirection(Direction.UP);
         } else if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S)) {
-            // send movement message to the server
             movementMessage.setDirection(Direction.DOWN);
         }
 
-        // don't send anything if player is not moving
+        // on't send anything if player is not moving
         if (movementMessage.getDirection() == null) return;
 
         ServerConnection

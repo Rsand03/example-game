@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import ee.taltech.examplegame.game.Arena;
 import ee.taltech.examplegame.network.ServerConnection;
 import message.GameStateMessage;
 import message.PlayerState;
