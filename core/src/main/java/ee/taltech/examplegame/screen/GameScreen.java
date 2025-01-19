@@ -35,8 +35,8 @@ public class GameScreen extends ScreenAdapter {
 
         // all rendering should happen between spriteBatch.begin() and spriteBatch.end()
         spriteBatch.begin();
-        arena.render(delta, spriteBatch);  // render players, bullets
-        hud.render(spriteBatch);  // render info overlay with names, lives etc
+        arena.render(delta, spriteBatch);  // players, bullets
+        hud.render();  // info overlay with names, lives etc
         spriteBatch.end();
 
     }
