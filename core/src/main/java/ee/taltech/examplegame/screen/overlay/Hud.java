@@ -2,6 +2,7 @@ package ee.taltech.examplegame.screen.overlay;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,15 +22,15 @@ import static ee.taltech.examplegame.component.TextLabel.createLabel;
 
 public class Hud {
 
-    private static final int LABEL_SIZE = 20;
+    private static final Integer LABEL_SIZE = 20;
     private static final Integer TABLE_PADDING_TOP = 20;
-    public static final int GAME_STATUS_LABEL_PADDING_TOP = 175;
+    public static final Integer GAME_STATUS_LABEL_PADDING_TOP = 150;
 
     private final Arena activeArena;
     private final Stage stage;
     private final Integer localPLayerId;
 
-    // initialize HUD labels with placeholder values, which can later be updated as the game state changes
+    // Initialize HUD labels with placeholder values, which can later be updated as the game state changes
     private final Label localPlayerNameLabel = createLabel("You", Color.GREEN, LABEL_SIZE);
     private final Label timeLabel = createLabel("0:00", Color.WHITE, LABEL_SIZE);
     private final Label remotePlayerNameLabel = createLabel("Enemy", Color.WHITE, LABEL_SIZE);
@@ -40,57 +41,56 @@ public class Hud {
     private final Label gameStatusLabel = createLabel("Waiting for other player...", Color.WHITE, LABEL_SIZE);
 
 
-    public Hud(Arena arena) {
+    public Hud(Arena arena, SpriteBatch batch) {
         activeArena = arena;
         localPLayerId = ServerConnection.getInstance().getClient().getID();
 
-        // viewport with hardcoded width and height works with any screen/window size
-        // there is also no need for additional font re-scaling when adjusting window size
+        // The viewport with current hardcoded width and height works decently with most screen/window sizes
+        // There's no need for additional font re-scaling when adjusting the window size
         Viewport viewport = new FitViewport(640, 480, new OrthographicCamera());
 
-        // create a stage to render the HUD content
-        stage = new Stage(viewport);
+        // Create a stage to render the HUD content
+        stage = new Stage(viewport, batch);
 
-        // create a table to display fields such as lives count
+        // Create a table to display fields such as lives count
         Table table = createHudTable();
         table.setDebug(false);  // true - outline all table cells, labels with a red line (makes table non-transparent)
         stage.addActor(table);
     }
 
     private Table createHudTable() {
-        // in very simple tables, using an empty placeholder label to adjust alignment is usually the easiest way
+        // For simple tables, using an empty placeholder label is usually the easiest solution to adjust alignment
         Label emptyLabel = createLabel("", Color.WHITE, LABEL_SIZE);
 
         Table table = new Table();
 
         table.setFillParent(true);
-        table.top();  // align the table's content to the top
+        table.top();  // Align the table's content to the top
         table.padTop(TABLE_PADDING_TOP);
 
-        // first row
+        // First row: player names and time
         table.add(localPlayerNameLabel);
         table.add(timeLabel);
         table.add(remotePlayerNameLabel);
         table.row().expandX();  // make the row fill the entire width of the screen
 
-        // second row
+        // Second row: player lives
         table.add(localPlayerLivesLabel);
         table.add(emptyLabel);  // empty label as a placeholder for alignment
         table.add(remotePlayerLivesLabel);
         table.row().expandX();
 
-        // third row
+        // Third row: game status message
         table.add(gameStatusLabel)
-            .colspan(3)  // make the label span across all 3 table columns
+            .colspan(3)  // Make the label span across all 3 table columns
             .padTop(GAME_STATUS_LABEL_PADDING_TOP)
-            .align(Align.center);  // center-align the label within the cell
-        ;
+            .align(Align.center);  // Center-align the label within the table cell
         table.row();
 
         return table;
     }
 
-    public void render() {
+    public void update() {
         GameStateMessage gameState = activeArena.getLatestGameStateMessage();
         if (gameState == null) return;
 
@@ -99,7 +99,7 @@ public class Hud {
 
         updateGameStatus(gameState);
 
-        // stage must be drawn (rendered) during each frame, even if there are no changes
+        // Stage must be drawn (rendered) during each frame, even if there are no changes
         stage.draw();
     }
 
@@ -121,7 +121,7 @@ public class Hud {
 
     private void updateGameStatus(GameStateMessage gameState) {
         if (gameState.isAllPlayersHaveJoined()) {
-            gameStatusLabel.setText("");  // remove "waiting for other players..." message
+            gameStatusLabel.setText("");  // Remove "waiting for other players..." message
         }
         for (PlayerState player : gameState.getPlayerStates()) {
             if (player.getId() == localPLayerId && player.getLives() == 0) {

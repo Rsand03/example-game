@@ -20,7 +20,7 @@ public class GameScreen extends ScreenAdapter {
 
         spriteBatch = new SpriteBatch();
         arena = new Arena();
-        hud = new Hud(arena);
+        hud = new Hud(arena, spriteBatch);
     }
 
     @Override
@@ -36,8 +36,9 @@ public class GameScreen extends ScreenAdapter {
         // all rendering should happen between spriteBatch.begin() and spriteBatch.end()
         spriteBatch.begin();
         arena.render(delta, spriteBatch);  // players, bullets
-        hud.render();  // info overlay with names, lives etc
         spriteBatch.end();
 
+
+        hud.update();  // info overlay with names, lives etc
     }
 }
