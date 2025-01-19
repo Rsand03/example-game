@@ -7,11 +7,11 @@ import message.GameStateMessage;
 
 public class GameStateMessageListener extends Listener {
 
-    private final GameStateManager remoteManager;
+    private final GameStateManager gameStateManager;
 
 
     public GameStateMessageListener(GameStateManager gameStateManager) {
-        this.remoteManager = gameStateManager;
+        this.gameStateManager = gameStateManager;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class GameStateMessageListener extends Listener {
 
         if (object instanceof GameStateMessage gameStateMessage) {
             // Update the game state
-            remoteManager.setLatestGameStateMessage(gameStateMessage);
+            gameStateManager.setLatestGameStateMessage(gameStateMessage);
         }
     }
 }
