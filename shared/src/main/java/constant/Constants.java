@@ -22,6 +22,7 @@ public class Constants {
 
     // --- game constants ---
     public static final int GAME_TICK_RATE = 60;
+    public static final int PLAYER_COUNT_IN_GAME = 2;
     // current values enforce the bounds at the edges of a default-size LibGDX window (defined in Lwjgl3Launcher)
     // changing these constants won't modify the size of the GameScreen
     public static final int ARENA_LOWER_BOUND_X = 0;

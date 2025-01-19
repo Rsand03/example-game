@@ -14,6 +14,10 @@ import static constant.Constants.*;
 @Setter
 public class Player {
     private final Connection connection;
+    // Keep track of listener objects for each player connection, so they can be disposed when the game ends
+    private final PlayerMovementListener movementListener = new PlayerMovementListener(this);
+    private final PlayerShootingListener shootingListener = new PlayerShootingListener(this);
+
     private final int id;
     private final Game game;
     private float x, y = 0f;
@@ -23,8 +27,8 @@ public class Player {
         this.connection = connection;
         this.id = connection.getID();
         this.game = game;
-        this.connection.addListener(new PlayerMovementListener(this));
-        this.connection.addListener(new PlayerShootingListener(this));
+        this.connection.addListener(movementListener);
+        this.connection.addListener(shootingListener);
     }
 
     public void move(message.Direction direction) {
@@ -64,4 +68,10 @@ public class Player {
             setLives(getLives() - 1);
         }
     }
+
+    public void dispose() {
+        connection.removeListener(movementListener);
+        connection.removeListener(shootingListener);
+    }
+
 }

@@ -39,10 +39,10 @@ public class ServerListener extends Listener {
      */
     @Override
     public void disconnected(Connection connection) {
-        Log.info("Client disconnected: " + connection.getRemoteAddressTCP().getAddress().getHostAddress());
-
-        game.removeConnection(connection);
-
+        Log.info("Client disconnected");
+        if (game != null) {
+            game.removeConnection(connection);
+        }
         super.disconnected(connection);
     }
 
@@ -61,7 +61,7 @@ public class ServerListener extends Listener {
         // connection to a game instance
         if (object instanceof GameJoinMessage) {
             if (game == null) {
-                game = new Game();
+                game = new Game(this);
             }
 
             game.addConnection(connection);
@@ -72,5 +72,12 @@ public class ServerListener extends Listener {
         }
 
         super.received(connection, object);
+    }
+
+    /**
+     * Disposes of the current game instance by setting the game reference to null.
+     */
+    public void disposeGame() {
+        this.game = null;
     }
 }
