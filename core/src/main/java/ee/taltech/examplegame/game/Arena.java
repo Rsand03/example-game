@@ -1,8 +1,6 @@
 package ee.taltech.examplegame.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import ee.taltech.examplegame.network.ServerConnection;
-import ee.taltech.examplegame.network.listener.GameStateMessageListener;
 import ee.taltech.examplegame.util.Sprites;
 import message.BulletState;
 import message.GameStateMessage;
@@ -10,21 +8,16 @@ import message.GameStateMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static constant.Constants.BULLET_HEIGHT_IN_PIXELS;
+import static constant.Constants.BULLET_WIDTH_IN_PIXELS;
+
 public class Arena {
+
     private final List<Player> players = new ArrayList<>();
     private List<BulletState> bullets = new ArrayList<>();
-    private GameStateMessage latestGameStateMessage;
 
-    public Arena() {
-        // listening for updates from the server
-        ServerConnection
-            .getInstance()
-            .getClient()
-            .addListener(new GameStateMessageListener(this));
-    }
 
-    public void updateGameState(GameStateMessage gameStateMessage) {
-        latestGameStateMessage = gameStateMessage;
+    public void update(GameStateMessage gameStateMessage) {
         gameStateMessage.getPlayerStates().forEach(playerState -> {
             var player = players
                 .stream()
@@ -55,13 +48,10 @@ public class Arena {
                 Sprites.bulletTexture,
                 bullet.getX(),
                 bullet.getY(),
-                8,
-                8
+                BULLET_WIDTH_IN_PIXELS,
+                BULLET_HEIGHT_IN_PIXELS
             );
         });
     }
 
-    public GameStateMessage getLatestGameStateMessage() {
-        return latestGameStateMessage;
-    }
 }
