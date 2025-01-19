@@ -2,16 +2,16 @@ package ee.taltech.examplegame.network.listener;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import ee.taltech.examplegame.game.GameStateReceiver;
+import ee.taltech.examplegame.game.GameStateManager;
 import message.GameStateMessage;
 
 public class GameStateMessageListener extends Listener {
 
-    private final GameStateReceiver remoteManager;
+    private final GameStateManager remoteManager;
 
 
-    public GameStateMessageListener(GameStateReceiver arena) {
-        this.remoteManager = arena;
+    public GameStateMessageListener(GameStateManager gameStateManager) {
+        this.remoteManager = gameStateManager;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class GameStateMessageListener extends Listener {
         super.received(connection, object);
 
         if (object instanceof GameStateMessage gameStateMessage) {
-            // update the game state
+            // Update the game state
             remoteManager.setLatestGameStateMessage(gameStateMessage);
         }
     }

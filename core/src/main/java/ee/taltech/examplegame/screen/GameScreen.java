@@ -7,22 +7,21 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ee.taltech.examplegame.game.Arena;
 import ee.taltech.examplegame.game.InputManager;
-import ee.taltech.examplegame.game.GameStateReceiver;
+import ee.taltech.examplegame.game.GameStateManager;
 import ee.taltech.examplegame.screen.overlay.Hud;
 import message.GameStateMessage;
 
 public class GameScreen extends ScreenAdapter {
 
-    private final GameStateReceiver gameStateReceiver;
+    private final GameStateManager gameStateManager;
     private final Arena arena;
     private final InputManager inputManager;
     private final Hud hud;
     private final SpriteBatch spriteBatch;
-    private GameStateMessage currentGameState;
 
 
     public GameScreen(Game game) {
-        gameStateReceiver = new GameStateReceiver();
+        gameStateManager = new GameStateManager();
         inputManager = new InputManager();
 
         spriteBatch = new SpriteBatch();
@@ -40,13 +39,14 @@ public class GameScreen extends ScreenAdapter {
         inputManager.handleMovementInput();
         inputManager.handleShootingInput();
 
-        currentGameState = gameStateReceiver.getLatestGameStateMessage();
+        // update time, lives, positions of the players etc
+        GameStateMessage currentGameState = gameStateManager.getLatestGameStateMessage();
         arena.update(currentGameState);  // update players' and bullets' positions
         hud.update(currentGameState);  // update info overlay with names, lives etc
 
-        // all rendering should happen between spriteBatch.begin() and spriteBatch.end()
+        // render players and bullets onto the screen
         spriteBatch.begin();
-        arena.render(delta, spriteBatch);  // players, bullets
+        arena.render(delta, spriteBatch);  // all rendering should happen between spriteBatch.begin() and .end()
         spriteBatch.end();
     }
 }
