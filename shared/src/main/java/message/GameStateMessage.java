@@ -8,4 +8,6 @@ import java.util.List;
 public class GameStateMessage {
     private List<PlayerState> playerStates;
     private List<BulletState> bulletStates;
+    private int gameTime;
+    private boolean allPlayersHaveJoined;
 }

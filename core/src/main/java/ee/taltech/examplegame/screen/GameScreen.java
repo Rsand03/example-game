@@ -7,16 +7,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ee.taltech.examplegame.game.Arena;
 import ee.taltech.examplegame.game.Input;
+import ee.taltech.examplegame.screen.overlay.Hud;
 
 public class GameScreen extends ScreenAdapter {
     private final Arena arena;
     private final Input input;
+    private final Hud hud;
     private final SpriteBatch spriteBatch;
 
     public GameScreen(Game game) {
-        arena = new Arena();
         input = new Input();
+
         spriteBatch = new SpriteBatch();
+        arena = new Arena();
+        hud = new Hud(arena, spriteBatch);
     }
 
     @Override
@@ -29,8 +33,12 @@ public class GameScreen extends ScreenAdapter {
         input.handleMovementInput();
         input.handleShootingInput();
 
+        // all rendering should happen between spriteBatch.begin() and spriteBatch.end()
         spriteBatch.begin();
-        arena.render(delta, spriteBatch);
+        arena.render(delta, spriteBatch);  // players, bullets
         spriteBatch.end();
+
+
+        hud.update();  // info overlay with names, lives etc
     }
 }

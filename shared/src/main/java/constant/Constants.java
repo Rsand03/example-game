@@ -8,7 +8,7 @@ public class Constants {
     public static final String SERVER_IP = "localhost";
     // --- player constants ---
     public static final float PLAYER_SPEED = 2.0f;
-    public static final int PLAYER_LIVES_COUNT = 5;
+    public static final int PLAYER_LIVES_COUNT = 50;
     public static final float PLAYER_HEIGHT_IN_PIXELS = 32;
     public static final float PLAYER_WIDTH_IN_PIXELS = 16;
     // --- bullet constants ---

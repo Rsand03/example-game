@@ -13,6 +13,7 @@ import java.util.List;
 public class Arena {
     private final List<Player> players = new ArrayList<>();
     private List<BulletState> bullets = new ArrayList<>();
+    private GameStateMessage latestGameStateMessage;
 
     public Arena() {
         // listening for updates from the server
@@ -23,6 +24,7 @@ public class Arena {
     }
 
     public void updateGameState(GameStateMessage gameStateMessage) {
+        latestGameStateMessage = gameStateMessage;
         gameStateMessage.getPlayerStates().forEach(playerState -> {
             var player = players
                 .stream()
@@ -57,5 +59,9 @@ public class Arena {
                 8
             );
         });
+    }
+
+    public GameStateMessage getLatestGameStateMessage() {
+        return latestGameStateMessage;
     }
 }
