@@ -17,7 +17,7 @@ public class Game extends Thread {
 
     private static final int LOBBY_SIZE = 2;  // TODO set when creating a new game
 
-    private final BulletCollisionManager collisionManager = new BulletCollisionManager();
+    private final BulletCollisionHandler collisionHandler = new BulletCollisionHandler();
     private final List<Connection> connections = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
     private List<Bullet> bullets = new ArrayList<>();
@@ -56,7 +56,7 @@ public class Game extends Thread {
             }
             // update bullets, check for collisions and remove out of bounds bullets
             bullets.forEach(Bullet::update);
-            bullets = collisionManager.handleCollisions(bullets, players);
+            bullets = collisionHandler.handleCollisions(bullets, players);
 
             // get the state of all players
             var playerStates = new ArrayList<PlayerState>();

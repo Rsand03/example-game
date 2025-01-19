@@ -26,7 +26,6 @@ public class Hud {
     private static final Integer TABLE_PADDING_TOP = 20;
     public static final Integer GAME_STATUS_LABEL_PADDING_TOP = 150;
 
-    private final Arena activeArena;
     private final Stage stage;
     private final Integer localPLayerId;
 
@@ -41,8 +40,7 @@ public class Hud {
     private final Label gameStatusLabel = createLabel("Waiting for other player...", Color.WHITE, LABEL_SIZE);
 
 
-    public Hud(Arena arena, SpriteBatch batch) {
-        activeArena = arena;
+    public Hud(SpriteBatch batch) {
         localPLayerId = ServerConnection.getInstance().getClient().getID();
 
         // The viewport with current hardcoded width and height works decently with most screen/window sizes
@@ -90,8 +88,7 @@ public class Hud {
         return table;
     }
 
-    public void update() {
-        GameStateMessage gameState = activeArena.getLatestGameStateMessage();
+    public void update(GameStateMessage gameState) {
         if (gameState == null) return;
 
         updateLives(gameState.getPlayerStates());

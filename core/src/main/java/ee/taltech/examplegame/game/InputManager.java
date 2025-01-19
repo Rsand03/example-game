@@ -6,7 +6,8 @@ import message.Direction;
 import message.PlayerMovementMessage;
 import message.PlayerShootingMessage;
 
-public class Input {
+public class InputManager {
+
     public void handleMovementInput() {
         var movementMessage = new PlayerMovementMessage();
 

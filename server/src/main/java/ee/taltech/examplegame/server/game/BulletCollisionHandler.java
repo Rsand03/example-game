@@ -13,7 +13,7 @@ import static constant.Constants.ARENA_UPPER_BOUND_Y;
 import static constant.Constants.PLAYER_HEIGHT_IN_PIXELS;
 import static constant.Constants.PLAYER_WIDTH_IN_PIXELS;
 
-public class BulletCollisionManager {
+public class BulletCollisionHandler {
 
 
     public List<Bullet> handleCollisions(List<Bullet> bullets, List<Player> players) {
