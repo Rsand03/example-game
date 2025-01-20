@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Align;
 
-import static ee.taltech.examplegame.util.Font.getPixelFont;
+import static ee.taltech.examplegame.util.Font.getArialFont;
 
 public class LabelComponents {
 
@@ -18,14 +18,14 @@ public class LabelComponents {
 
 
     public static Label createLabel(String text, Color textColor, int size) {
-        BitmapFont font = getPixelFont(size);
+        BitmapFont font = getArialFont(size);
         LabelStyle labelStyle = new LabelStyle(font, textColor);
 
         return new Label(text, labelStyle);
     }
 
     public static Label createLabelWithBackground(String text, Color textColor, int size) {
-        BitmapFont font = getPixelFont(size);
+        BitmapFont font = getArialFont(size);
         LabelStyle labelStyle = new LabelStyle(font, textColor);
 
         Label label = new Label(text, labelStyle);
