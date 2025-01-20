@@ -10,7 +10,10 @@ public class GameStateManager {
 
     private GameStateMessage latestGameStateMessage;
 
-
+    /**
+     * GameStateManager listens for GameStateMessages sent from the server
+     * and forwards it to relevant components like the HUD and Arena.
+     */
     public GameStateManager() {
         // Listening for updates from the server
         ServerConnection

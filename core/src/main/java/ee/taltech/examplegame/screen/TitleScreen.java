@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import ee.taltech.examplegame.network.ServerConnection;
 import message.GameJoinMessage;
 
-import static ee.taltech.examplegame.component.Button.getButton;
+import static ee.taltech.examplegame.component.ButtonComponents.getButton;
 
 public class TitleScreen extends ScreenAdapter {
     private final Stage stage;

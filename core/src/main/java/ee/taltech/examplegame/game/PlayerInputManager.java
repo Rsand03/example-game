@@ -1,22 +1,16 @@
 package ee.taltech.examplegame.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import ee.taltech.examplegame.network.ServerConnection;
-import ee.taltech.examplegame.screen.TitleScreen;
 import message.Direction;
 import message.PlayerMovementMessage;
 import message.PlayerShootingMessage;
 
-public class InputManager {
-
-    public void handleNavigationInput(Game game) {
-        // navigate to TitleScreen
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new TitleScreen(game));
-        }
-    }
+/**
+ * Listens for user input in the GameScreen regarding player movement and shooting,
+ * forwards the corresponding messages to the server.
+ */
+public class PlayerInputManager {
 
     public void handleMovementInput() {
         var movementMessage = new PlayerMovementMessage();
@@ -32,13 +26,13 @@ public class InputManager {
             movementMessage.setDirection(Direction.DOWN);
         }
 
-        // on't send anything if player is not moving
+        // don't send anything if player is not moving
         if (movementMessage.getDirection() == null) return;
 
         ServerConnection
             .getInstance()
             .getClient()
-            .sendUDP(movementMessage);
+            .sendUDP(movementMessage);  // UDP, because nothing bad happens when some messages don't react the server
     }
 
     public void handleShootingInput() {
