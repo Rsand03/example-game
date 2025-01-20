@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import static com.badlogic.gdx.graphics.Color.BLACK;
 import static ee.taltech.examplegame.util.Font.getPixelFont;
 
-public class Button {
+public class ButtonComponents {
+
     public static TextButton getButton(int fontSize, String text, OnClickHandler onClickHandler) {
         // styling the button
         var style = new TextButton.TextButtonStyle();

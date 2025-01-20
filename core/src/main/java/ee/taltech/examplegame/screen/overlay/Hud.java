@@ -16,30 +16,35 @@ import message.PlayerState;
 import java.util.List;
 
 import static constant.Constants.PLAYER_LIVES_COUNT;
-import static ee.taltech.examplegame.component.TextLabel.createLabel;
-
+import static ee.taltech.examplegame.component.LabelComponents.createLabel;
+import static ee.taltech.examplegame.component.LabelComponents.createLabelWithBackground;
 
 public class Hud {
 
     private static final Integer LABEL_SIZE = 20;
     private static final Integer TABLE_PADDING_TOP = 20;
     public static final Integer GAME_STATUS_LABEL_PADDING_TOP = 150;
+    public static final String INITIAL_LIVES_COUNT = String.valueOf(PLAYER_LIVES_COUNT);
 
     private final Stage stage;
     private final Integer localPLayerId;
 
     // Initialize HUD labels with placeholder values, which can later be updated as the game state changes
-    private final Label localPlayerNameLabel = createLabel("You", Color.GREEN, LABEL_SIZE);
-    private final Label timeLabel = createLabel("0:00", Color.WHITE, LABEL_SIZE);
-    private final Label remotePlayerNameLabel = createLabel("Enemy", Color.WHITE, LABEL_SIZE);
+    private final Label localPlayerNameLabel = createLabelWithBackground("You", Color.GREEN, LABEL_SIZE);
+    private final Label timeLabel = createLabelWithBackground("0:00", Color.WHITE, LABEL_SIZE);
+    private final Label remotePlayerNameLabel = createLabelWithBackground("Enemy", Color.WHITE, LABEL_SIZE);
 
-    private final Label localPlayerLivesLabel = createLabel(String.valueOf(PLAYER_LIVES_COUNT), Color.RED, LABEL_SIZE);
-    private final Label remotePlayerLivesLabel = createLabel(String.valueOf(PLAYER_LIVES_COUNT), Color.RED, LABEL_SIZE);
+    private final Label localPlayerLivesLabel = createLabelWithBackground(INITIAL_LIVES_COUNT, Color.RED, LABEL_SIZE);
+    private final Label remotePlayerLivesLabel = createLabelWithBackground(INITIAL_LIVES_COUNT, Color.RED, LABEL_SIZE);
 
-    private final Label gameStatusLabel = createLabel("Waiting for other player...", Color.WHITE, LABEL_SIZE);
+    private final Label gameStatusLabel = createLabel("Waiting for other player...", Color.BLACK, LABEL_SIZE);
 
-
-    public Hud(SpriteBatch batch) {
+    /**
+     * Info overlay that contains information about: player names, lives, game status, game time.
+     *
+     * @param spriteBatch helps sync the rendering process with arena incl. player textures
+     */
+    public Hud(SpriteBatch spriteBatch) {
         localPLayerId = ServerConnection.getInstance().getClient().getID();
 
         // The viewport with current hardcoded width and height works decently with most screen/window sizes
@@ -47,7 +52,7 @@ public class Hud {
         Viewport viewport = new FitViewport(640, 480, new OrthographicCamera());
 
         // Create a stage to render the HUD content
-        stage = new Stage(viewport, batch);
+        stage = new Stage(viewport, spriteBatch);
 
         // Create a table to display fields such as lives count
         Table table = createHudTable();
@@ -55,13 +60,15 @@ public class Hud {
         stage.addActor(table);
     }
 
+    /**
+     * Table manages where different fields such as player names and lives are displayed on the screen
+     */
     private Table createHudTable() {
         // For simple tables, using an empty placeholder label is usually the easiest solution to adjust alignment
         Label emptyLabel = createLabel("", Color.WHITE, LABEL_SIZE);
 
         Table table = new Table();
-
-        table.setFillParent(true);
+        table.setFillParent(true);  // Fill whole screen
         table.top();  // Align the table's content to the top
         table.padTop(TABLE_PADDING_TOP);
 
@@ -87,16 +94,22 @@ public class Hud {
         return table;
     }
 
-    public void update(GameStateMessage gameState) {
-        if (gameState == null) return;
-
-        updateLives(gameState.getPlayerStates());
-        updateTime(gameState.getGameTime());
-
-        updateGameStatus(gameState);
-
-        // Stage must be drawn (rendered) during each frame, even if there are no changes
+    /**
+     * Stage, which contains all HUD content, must be re-rendered each frame, even if there are no changes.
+     */
+    public void render() {
         stage.draw();
+    }
+
+    /**
+     * Update time, lives and game state (waiting for other players / active / game over).
+     *
+     * @param gameStateMessage latest game state received from the server
+     */
+    public void update(GameStateMessage gameStateMessage) {
+        updateLives(gameStateMessage.getPlayerStates());
+        updateTime(gameStateMessage.getGameTime());
+        updateGameStatus(gameStateMessage);
     }
 
     private void updateLives(List<PlayerState> players) {
@@ -117,14 +130,15 @@ public class Hud {
 
     private void updateGameStatus(GameStateMessage gameState) {
         if (gameState.isAllPlayersHaveJoined()) {
-            gameStatusLabel.setText("");  // Remove "waiting for other players..." message
+            gameStatusLabel.setText(""); // remove "Waiting for other players ..."
         }
         for (PlayerState player : gameState.getPlayerStates()) {
             if (player.getId() == localPLayerId && player.getLives() == 0) {
-                gameStatusLabel.setColor(Color.RED);
+                gameStatusLabel.getStyle().fontColor = Color.RED;
                 gameStatusLabel.setText("You lost");
+                System.out.println(gameStatusLabel.getColor());
             } else if (player.getId() != localPLayerId && player.getLives() == 0) {
-                gameStatusLabel.setColor(Color.GREEN);
+                gameStatusLabel.getStyle().fontColor = Color.GREEN;
                 gameStatusLabel.setText("You won");
             }
         }

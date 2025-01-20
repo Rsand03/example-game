@@ -8,15 +8,25 @@ import message.GameStateMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static constant.Constants.ARENA_UPPER_BOUND_X;
+import static constant.Constants.ARENA_UPPER_BOUND_Y;
 import static constant.Constants.BULLET_HEIGHT_IN_PIXELS;
 import static constant.Constants.BULLET_WIDTH_IN_PIXELS;
+import static ee.taltech.examplegame.util.Sprites.taltechMapTexture;
 
+/**
+ * Initialize a new Arena, which is responsible for updating and rendering the following: players, bullets, map.
+ */
 public class Arena {
 
     private final List<Player> players = new ArrayList<>();
     private List<BulletState> bullets = new ArrayList<>();
 
-
+    /**
+     * Update players and bullets, so they are later rendered in the correct position.
+     *
+     * @param gameStateMessage latest game state received from the server
+     */
     public void update(GameStateMessage gameStateMessage) {
         gameStateMessage.getPlayerStates().forEach(playerState -> {
             var player = players
@@ -36,7 +46,16 @@ public class Arena {
         this.bullets = gameStateMessage.getBulletStates();
     }
 
+    /**
+     * Render map, players and bullets. This makes them  visible on the screen.
+     *
+     * @param delta       time since last frame
+     * @param spriteBatch used for rendering (and syncing) all visual elements
+     */
     public void render(float delta, SpriteBatch spriteBatch) {
+        // render map
+        spriteBatch.draw(taltechMapTexture, 0, 0, ARENA_UPPER_BOUND_X, ARENA_UPPER_BOUND_Y);
+
         // render all players
         players.forEach(player -> {
             player.render(delta, spriteBatch);

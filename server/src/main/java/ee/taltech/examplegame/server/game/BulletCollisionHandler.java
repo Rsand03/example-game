@@ -13,9 +13,18 @@ import static constant.Constants.ARENA_UPPER_BOUND_Y;
 import static constant.Constants.PLAYER_HEIGHT_IN_PIXELS;
 import static constant.Constants.PLAYER_WIDTH_IN_PIXELS;
 
+/**
+ * Handles bullet collisions with players and arena boundaries.
+ */
 public class BulletCollisionHandler {
 
-
+    /**
+     * Checks for collisions between bullets and players, removes bullets that hit players or moved out of bounds.
+     *
+     * @param bullets The list of bullets in the game.
+     * @param players The list of players to check for collisions.
+     * @return A list of remaining bullets after handling collisions.
+     */
     public List<Bullet> handleCollisions(List<Bullet> bullets, List<Player> players) {
         List<Bullet> bulletsToBeRemoved = new ArrayList<>();
 
@@ -35,6 +44,12 @@ public class BulletCollisionHandler {
         return bullets;
     }
 
+    /**
+     * Finds bullets that are out of the arena bounds.
+     *
+     * @param bullets All active bullets.
+     * @return Bullets that are out of bounds.
+     */
     private List<Bullet> findOutOfBoundsBullets(List<Bullet> bullets) {
         List<Bullet> outOfBoundsBullets = new ArrayList<>();
         for (Bullet bullet : bullets) {
@@ -49,6 +64,9 @@ public class BulletCollisionHandler {
         return outOfBoundsBullets;
     }
 
+    /**
+     * Constructs a rectangular hitbox for a player based on their position.
+     */
     private Rectangle constructPlayerHitBox(Player player) {
         return
             new Rectangle(
