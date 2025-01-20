@@ -11,6 +11,10 @@ import message.GameJoinMessage;
 
 import static ee.taltech.examplegame.component.ButtonComponents.getButton;
 
+/**
+ * TitleScreen represents the main menu of the game, where players can choose to start the game or exit.
+ * It listens for user input and directs user to different screens, for example TitleScreen -> GameScreen.
+ */
 public class TitleScreen extends ScreenAdapter {
     private final Stage stage;
 
@@ -39,6 +43,11 @@ public class TitleScreen extends ScreenAdapter {
         stage.addActor(table);
     }
 
+    /**
+     * Renders the TitleScreen, clearing it and drawing the buttons.
+     *
+     * @param delta time since last frame.
+     */
     @Override
     public void render(float delta) {
         super.render(delta);

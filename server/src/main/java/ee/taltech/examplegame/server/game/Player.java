@@ -10,6 +10,10 @@ import message.PlayerState;
 
 import static constant.Constants.*;
 
+/**
+ * Server-side representation of a player in the game. This class listens for player movements or shooting actions
+ * and changes the player's server-side state accordingly. Lives management.
+ */
 @Getter
 @Setter
 public class Player {
@@ -23,6 +27,12 @@ public class Player {
     private float x, y = 0f;
     private int lives = PLAYER_LIVES_COUNT;
 
+    /**
+     * Initializes a new server-side representation of a Player with a game reference and connection to client-side.
+     *
+     * @param connection Connection to client-side.
+     * @param game Game instance that this player is a part of.
+     */
     public Player(Connection connection, Game game) {
         this.connection = connection;
         this.id = connection.getID();
@@ -31,6 +41,11 @@ public class Player {
         this.connection.addListener(shootingListener);
     }
 
+    /**
+     * Moves the player in the specified direction within the arena bounds.
+     *
+     * @param direction The direction in which the player moves.
+     */
     public void move(message.Direction direction) {
         if (direction == null) return;
 
@@ -47,6 +62,9 @@ public class Player {
 
     }
 
+    /**
+     * Returns the current state of the player, consisting of their position and remaining lives.
+     */
     public PlayerState getState() {
         PlayerState playerState = new PlayerState();
         playerState.setId(connection.getID());
@@ -69,6 +87,12 @@ public class Player {
         }
     }
 
+    /**
+     * Removes the movement and shooting listeners from the player's connection.
+     * This should be called when the player disconnects or the game ends.
+     * Disposing of the listeners prevents potential thread exceptions when reusing
+     * same connections for future game instances.
+     */
     public void dispose() {
         connection.removeListener(movementListener);
         connection.removeListener(shootingListener);

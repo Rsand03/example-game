@@ -15,6 +15,10 @@ import java.util.List;
 import static constant.Constants.GAME_TICK_RATE;
 import static constant.Constants.PLAYER_COUNT_IN_GAME;
 
+/**
+ * Represents the game logic and server-side management of the game instance.
+ * Handles player connections, game state updates, bullet collisions, and communication with clients.
+ */
 public class Game extends Thread {
 
     private final ServerListener server;
@@ -28,7 +32,11 @@ public class Game extends Thread {
     private boolean allPlayersHaveJoined = false;
     private float gameTime = 0;
 
-
+    /**
+     * Initializes the game instance.
+     *
+     * @param server Reference to ServerListener to call dispose() when the game is finished or all players leave.
+     */
     public Game(ServerListener server) {
         this.server = server;
     }
@@ -38,10 +46,19 @@ public class Game extends Thread {
         this.bullets.add(bullet);
     }
 
+    /**
+     * Check if the game has the required number of players to start.
+     */
     public boolean hasEnoughPlayers() {
         return connections.size() == PLAYER_COUNT_IN_GAME;
     }
 
+    /**
+     * Adds a new connection and player to the game.
+     * If the required number of players is reached, the game is ready to start.
+     *
+     * @param connection Connection to the client side of the player.
+     */
     public void addConnection(Connection connection) {
         if (hasEnoughPlayers()) {
             Log.info("Cannot add connection: Required number of players already connected.");
@@ -63,6 +80,10 @@ public class Game extends Thread {
         this.connections.remove(connection);
     }
 
+    /**
+     * Game loop. Updates the game state, checks for collisions, and sends updates to clients.
+     * The game loop runs until the game is stopped or no players remain.
+     */
     @Override
     public void run() {
         isGameRunning = true;
