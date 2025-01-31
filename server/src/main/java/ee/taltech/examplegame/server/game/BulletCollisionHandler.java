@@ -66,6 +66,8 @@ public class BulletCollisionHandler {
 
     /**
      * Constructs a rectangular hitbox for a player based on their position.
+     * A hitbox is essential for detecting collisions between players and bullets.
+     * Only bullets that visually overlap with the player's sprite register as hits.
      */
     private Rectangle constructPlayerHitBox(Player player) {
         return

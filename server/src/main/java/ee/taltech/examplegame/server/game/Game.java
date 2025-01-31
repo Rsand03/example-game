@@ -3,14 +3,15 @@ package ee.taltech.examplegame.server.game;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import ee.taltech.examplegame.server.listener.ServerListener;
-import lombok.Getter;
-import message.dto.BulletState;
 import message.GameStateMessage;
+import message.dto.BulletState;
 import message.dto.PlayerState;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static constant.Constants.GAME_TICK_RATE;
 import static constant.Constants.PLAYER_COUNT_IN_GAME;
@@ -18,17 +19,20 @@ import static constant.Constants.PLAYER_COUNT_IN_GAME;
 /**
  * Represents the game logic and server-side management of the game instance.
  * Handles player connections, game state updates, bullet collisions, and communication with clients.
+ * <p>
+ * This class extends {@link Thread} because the game loop needs to run continuously
+ * in the background, independent of other server operations. By running in a separate thread,
+ * it ensures that the game state updates at a fixed tick rate without blocking other processes in the main server.
  */
 public class Game extends Thread {
 
     private final ServerListener server;
     private final BulletCollisionHandler collisionHandler = new BulletCollisionHandler();
 
-    private final List<Connection> connections = new ArrayList<>();
+    private final Set<Connection> connections = new HashSet<>();  // Avoid a connection (player) joining the game twice
     private final List<Player> players = new ArrayList<>();
     private List<Bullet> bullets = new ArrayList<>();
-    @Getter
-    private boolean isGameRunning = false;
+
     private boolean allPlayersHaveJoined = false;
     private float gameTime = 0;
 
@@ -36,9 +40,13 @@ public class Game extends Thread {
      * Initializes the game instance.
      *
      * @param server Reference to ServerListener to call dispose() when the game is finished or all players leave.
+     * @param firstConnection Connection of the first player.
      */
-    public Game(ServerListener server) {
+    public Game(ServerListener server, Connection firstConnection) {
         this.server = server;
+        Player newPlayer = new Player(firstConnection, this);
+        players.add(newPlayer);
+        connections.add(firstConnection);
     }
 
 
@@ -81,12 +89,21 @@ public class Game extends Thread {
     }
 
     /**
+     * Stops and disposes the current game instance, so a new one can be created with the same or new players.
+     */
+    private void disposeGame() {
+        players.forEach(Player::dispose);  // remove movement and shooting listeners
+        connections.clear();
+        server.disposeGame();  // Sets the active game instance in main server to null
+    }
+
+    /**
      * Game loop. Updates the game state, checks for collisions, and sends updates to clients.
      * The game loop runs until the game is stopped or no players remain.
      */
     @Override
     public void run() {
-        isGameRunning = true;
+        boolean isGameRunning = true;
 
         while (isGameRunning) {
             if (allPlayersHaveJoined) {
@@ -114,19 +131,17 @@ public class Game extends Thread {
             // send the state of all players to all clients
             connections.forEach(connection -> connection.sendUDP(gameStateMessage));
 
-            // If a player is dead, end the game
+            // If any player is dead, end the game
             if (players.stream().anyMatch(x -> x.getLives() == 0)) {
                 // Use TCP to ensure that the last gameStateMessage reaches all clients
                 connections.forEach(connection -> connection.sendTCP(gameStateMessage));
-                players.forEach(Player::dispose); // remove movement and shooting listeners
-                connections.clear();
-                server.disposeGame();
+                disposeGame();
                 isGameRunning = false;
             }
-
             // If no players are connected, stop the game loop
             if (connections.isEmpty()) {
                 Log.info("No players connected, stopping game loop.");
+                disposeGame();
                 isGameRunning = false;
             }
 

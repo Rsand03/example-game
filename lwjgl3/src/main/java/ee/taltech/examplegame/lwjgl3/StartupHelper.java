@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 
+// Default LibGDX class that is required to run the client
+
 /**
  * Adds some utilities to ensure that the JVM was started with the
  * {@code -XstartOnFirstThread} argument, which is required on macOS for LWJGL 3

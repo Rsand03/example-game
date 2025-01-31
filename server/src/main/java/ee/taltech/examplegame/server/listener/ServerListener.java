@@ -57,17 +57,14 @@ public class ServerListener extends Listener {
     public void received(Connection connection, Object object) {
         Log.debug("Received message from client (" + connection.getRemoteAddressTCP().getAddress().getHostAddress() + "): " + object.toString());
 
-        // when a GameJoin message is received, the server will add the
-        // connection to a game instance
+        // when a GameJoinMessage is received, the server will add the connection to the game instance
+        // if there is no active instance, a new one is created
         if (object instanceof GameJoinMessage) {
             if (game == null) {
-                game = new Game(this);
-            }
-
-            game.addConnection(connection);
-
-            if (!game.isGameRunning()) {
-                game.start();
+                game = new Game(this, connection);  // Create a new game instance for the first player (connection)
+                game.start();  // Start the Thread, which contains the main game loop
+            } else {
+                game.addConnection(connection);  // Add a second player (connection) if there is enough room in the game
             }
         }
 

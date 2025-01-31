@@ -6,11 +6,11 @@ import ee.taltech.examplegame.Main;
 
 /**
  * Launches the desktop application.
- * Previously named DesktopLauncher, but renamed to Lwjgl3Launcher for unknown reasons.
+ * Previously named DesktopLauncher, but renamed to Lwjgl3Launcher due to some unknown reason.
  * (Light-Weight-Java-Game-Library-3)
  */
 public class Lwjgl3Launcher {
-    // This starts the client, running all content in the 'core' package.
+    // This 'public static void main' starts the client, running all content in the 'core' package.
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
