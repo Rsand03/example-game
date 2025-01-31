@@ -16,6 +16,8 @@ import static ee.taltech.examplegame.util.Sprites.taltechMapTexture;
 
 /**
  * Initialize a new Arena, which is responsible for updating and rendering the following: players, bullets, map.
+ * Updating - modifying the inner state of objects (e.g. Player) based on game state messages received from the server.
+ * Rendering - making the (updated) objects visible on the screen.
  */
 public class Arena {
 

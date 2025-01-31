@@ -65,7 +65,7 @@ public class GameScreen extends ScreenAdapter {
         hud.render(); // render the HUD last to ensure it appears on top of all other content
     }
 
-    public void handleScreenNavigation(Game game) {
+    private void handleScreenNavigation(Game game) {
         // navigate to TitleScreen
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new TitleScreen(game));
