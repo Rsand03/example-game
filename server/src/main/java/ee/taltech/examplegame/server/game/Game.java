@@ -4,9 +4,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import ee.taltech.examplegame.server.listener.ServerListener;
 import lombok.Getter;
-import message.BulletState;
+import message.dto.BulletState;
 import message.GameStateMessage;
-import message.PlayerState;
+import message.dto.PlayerState;
 
 import java.time.Duration;
 import java.util.ArrayList;

@@ -2,8 +2,8 @@ package ee.taltech.examplegame.server.game;
 
 import lombok.Getter;
 import lombok.Setter;
-import message.BulletState;
-import message.Direction;
+import message.dto.BulletState;
+import message.dto.Direction;
 
 import static constant.Constants.BULLET_SPEED;
 

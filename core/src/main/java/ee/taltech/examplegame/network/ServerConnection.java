@@ -8,9 +8,9 @@ import static network.KryoHelper.registerClasses;
 
 /**
  * Handles the connection to the server.
- * <p>
- * This class is a singleton, meaning that only one instance of this class can
- * exist at a time.
+ * This class is a singleton, meaning that only one instance of this class can exist at a time.
+ * More about singletons:
+ * <a href="https://javadoc.pages.taltech.ee/design_patterns/creational_patterns.html#singel-singleton">...</a>
  */
 public class ServerConnection {
     private static ServerConnection instance;

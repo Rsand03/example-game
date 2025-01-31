@@ -1,6 +1,8 @@
 package message;
 
 import lombok.Data;
+import message.dto.BulletState;
+import message.dto.PlayerState;
 
 import java.util.List;
 

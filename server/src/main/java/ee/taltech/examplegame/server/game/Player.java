@@ -5,8 +5,8 @@ import ee.taltech.examplegame.server.listener.PlayerMovementListener;
 import ee.taltech.examplegame.server.listener.PlayerShootingListener;
 import lombok.Getter;
 import lombok.Setter;
-import message.Direction;
-import message.PlayerState;
+import message.dto.Direction;
+import message.dto.PlayerState;
 
 import static constant.Constants.*;
 
@@ -46,7 +46,7 @@ public class Player {
      *
      * @param direction The direction in which the player moves.
      */
-    public void move(message.Direction direction) {
+    public void move(Direction direction) {
         if (direction == null) return;
 
         switch (direction) {

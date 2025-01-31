@@ -59,7 +59,7 @@ public class GameScreen extends ScreenAdapter {
 
         // render players and bullets onto the screen
         spriteBatch.begin();
-        arena.render(delta, spriteBatch);  // all spriteBatch rendering should occur between .begin() and .end()
+        arena.render(spriteBatch);  // all spriteBatch rendering should occur between .begin() and .end()
         spriteBatch.end();
 
         hud.render(); // render the HUD last to ensure it appears on top of all other content

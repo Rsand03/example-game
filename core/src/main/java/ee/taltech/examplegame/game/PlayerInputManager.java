@@ -2,7 +2,7 @@ package ee.taltech.examplegame.game;
 
 import com.badlogic.gdx.Gdx;
 import ee.taltech.examplegame.network.ServerConnection;
-import message.Direction;
+import message.dto.Direction;
 import message.PlayerMovementMessage;
 import message.PlayerShootingMessage;
 
@@ -29,10 +29,11 @@ public class PlayerInputManager {
         // don't send anything if player is not moving
         if (movementMessage.getDirection() == null) return;
 
+        // message is sent to the server
         ServerConnection
             .getInstance()
             .getClient()
-            .sendUDP(movementMessage);  // UDP, because nothing bad happens when some messages don't react the server
+            .sendUDP(movementMessage);  // UDP, because nothing bad happens when some messages don't reach the server
     }
 
     public void handleShootingInput() {
@@ -52,6 +53,7 @@ public class PlayerInputManager {
         // don't send anything if player is not shooting
         if (shootingMessage.getDirection() == null) return;
 
+        // message is sent to the server
         ServerConnection
             .getInstance()
             .getClient()

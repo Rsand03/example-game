@@ -27,7 +27,7 @@ public class Player {
         this.y = y;
     }
 
-    public void render(float delta, SpriteBatch spriteBatch) {
+    public void render(SpriteBatch spriteBatch) {
         // draw the player sprite
         spriteBatch.draw(Sprites.playerTexture, x, y, PLAYER_WIDTH_IN_PIXELS, PLAYER_HEIGHT_IN_PIXELS);
     }
