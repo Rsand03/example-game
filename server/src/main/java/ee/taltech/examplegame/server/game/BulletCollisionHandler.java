@@ -1,6 +1,8 @@
 package ee.taltech.examplegame.server.game;
 
 import com.esotericsoftware.minlog.Log;
+import ee.taltech.examplegame.server.game.object.Bullet;
+import ee.taltech.examplegame.server.game.object.Player;
 
 import java.awt.*;
 import java.util.ArrayList;

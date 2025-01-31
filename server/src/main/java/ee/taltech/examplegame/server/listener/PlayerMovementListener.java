@@ -3,7 +3,7 @@ package ee.taltech.examplegame.server.listener;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
-import ee.taltech.examplegame.server.game.Player;
+import ee.taltech.examplegame.server.game.object.Player;
 import message.PlayerMovementMessage;
 
 public class PlayerMovementListener extends Listener {

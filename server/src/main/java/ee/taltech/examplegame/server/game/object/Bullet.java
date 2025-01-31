@@ -1,4 +1,4 @@
-package ee.taltech.examplegame.server.game;
+package ee.taltech.examplegame.server.game.object;
 
 import lombok.Getter;
 import lombok.Setter;

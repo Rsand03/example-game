@@ -1,6 +1,7 @@
-package ee.taltech.examplegame.server.game;
+package ee.taltech.examplegame.server.game.object;
 
 import com.esotericsoftware.kryonet.Connection;
+import ee.taltech.examplegame.server.game.GameInstance;
 import ee.taltech.examplegame.server.listener.PlayerMovementListener;
 import ee.taltech.examplegame.server.listener.PlayerShootingListener;
 import lombok.Getter;
@@ -8,7 +9,14 @@ import lombok.Setter;
 import message.dto.Direction;
 import message.dto.PlayerState;
 
-import static constant.Constants.*;
+import static constant.Constants.ARENA_LOWER_BOUND_X;
+import static constant.Constants.ARENA_LOWER_BOUND_Y;
+import static constant.Constants.ARENA_UPPER_BOUND_X;
+import static constant.Constants.ARENA_UPPER_BOUND_Y;
+import static constant.Constants.PLAYER_HEIGHT_IN_PIXELS;
+import static constant.Constants.PLAYER_LIVES_COUNT;
+import static constant.Constants.PLAYER_SPEED;
+import static constant.Constants.PLAYER_WIDTH_IN_PIXELS;
 
 /**
  * Server-side representation of a player in the game. This class listens for player movements or shooting actions

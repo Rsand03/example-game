@@ -2,10 +2,9 @@ package ee.taltech.examplegame.server.game;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
+import ee.taltech.examplegame.server.game.object.Bullet;
+import ee.taltech.examplegame.server.game.object.Player;
 import ee.taltech.examplegame.server.listener.ServerListener;
-import message.GameStateMessage;
-import message.dto.BulletState;
-import message.dto.PlayerState;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,13 +27,11 @@ public class GameInstance extends Thread {
 
     private final ServerListener server;
     private final BulletCollisionHandler collisionHandler = new BulletCollisionHandler();
+    private final GameStateHandler gameStateHandler = new GameStateHandler();
 
     private final Set<Connection> connections = new HashSet<>();  // Avoid a connection (player) joining the game twice
     private final List<Player> players = new ArrayList<>();
     private List<Bullet> bullets = new ArrayList<>();
-
-    private boolean allPlayersHaveJoined = false;
-    private float gameTime = 0;
 
     /**
      * Initializes the game instance.
@@ -48,7 +45,6 @@ public class GameInstance extends Thread {
         players.add(newPlayer);
         connections.add(firstConnection);
     }
-
 
     public void addBullet(Bullet bullet) {
         this.bullets.add(bullet);
@@ -80,7 +76,7 @@ public class GameInstance extends Thread {
 
         // Check if the game is ready to start
         if (hasEnoughPlayers()) {
-            allPlayersHaveJoined = true;
+            gameStateHandler.setAllPlayersHaveJoined(true);
         }
     }
 
@@ -106,30 +102,17 @@ public class GameInstance extends Thread {
         boolean isGameRunning = true;
 
         while (isGameRunning) {
-            if (allPlayersHaveJoined) {
-                gameTime += 1f / GAME_TICK_RATE;
-            }
+            gameStateHandler.incrementGameTimeIfPlayersPresent();
 
             // update bullets, check for collisions and remove out of bounds bullets
             bullets.forEach(Bullet::update);
             bullets = collisionHandler.handleCollisions(bullets, players);
 
-            // get the state of all players
-            var playerStates = new ArrayList<PlayerState>();
-            players.forEach(player -> playerStates.add(player.getState()));
-
-            // get state of all bullets
-            var bulletStates = new ArrayList<BulletState>();
-            bullets.forEach(bullet -> bulletStates.add(bullet.getState()));
-
-            var gameStateMessage = new GameStateMessage();
-            gameStateMessage.setPlayerStates(playerStates);
-            gameStateMessage.setBulletStates(bulletStates);
-            gameStateMessage.setGameTime(Math.round(gameTime));
-            gameStateMessage.setAllPlayersHaveJoined(allPlayersHaveJoined);
-
-            // send the state of all players to all clients
+            // construct gameStateMessage
+            var gameStateMessage = gameStateHandler.getGameStateMessage(players, bullets);
+            // send the state of current game to all connected clients
             connections.forEach(connection -> connection.sendUDP(gameStateMessage));
+
 
             // If any player is dead, end the game
             if (players.stream().anyMatch(x -> x.getLives() == 0)) {
