@@ -24,7 +24,7 @@ import static constant.Constants.PLAYER_COUNT_IN_GAME;
  * in the background, independent of other server operations. By running in a separate thread,
  * it ensures that the game state updates at a fixed tick rate without blocking other processes in the main server.
  */
-public class Game extends Thread {
+public class GameInstance extends Thread {
 
     private final ServerListener server;
     private final BulletCollisionHandler collisionHandler = new BulletCollisionHandler();
@@ -42,7 +42,7 @@ public class Game extends Thread {
      * @param server Reference to ServerListener to call dispose() when the game is finished or all players leave.
      * @param firstConnection Connection of the first player.
      */
-    public Game(ServerListener server, Connection firstConnection) {
+    public GameInstance(ServerListener server, Connection firstConnection) {
         this.server = server;
         Player newPlayer = new Player(firstConnection, this);
         players.add(newPlayer);

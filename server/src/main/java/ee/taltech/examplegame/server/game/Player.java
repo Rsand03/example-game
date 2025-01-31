@@ -23,7 +23,7 @@ public class Player {
     private final PlayerShootingListener shootingListener = new PlayerShootingListener(this);
 
     private final int id;
-    private final Game game;
+    private final GameInstance game;
     private float x, y = 0f;
     private int lives = PLAYER_LIVES_COUNT;
 
@@ -33,7 +33,7 @@ public class Player {
      * @param connection Connection to client-side.
      * @param game Game instance that this player is a part of.
      */
-    public Player(Connection connection, Game game) {
+    public Player(Connection connection, GameInstance game) {
         this.connection = connection;
         this.id = connection.getID();
         this.game = game;
