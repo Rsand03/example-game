@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import ee.taltech.examplegame.network.ServerConnection;
 import message.GameStateMessage;
-import message.PlayerState;
+import message.dto.PlayerState;
 
 import java.util.List;
 
@@ -42,7 +42,8 @@ public class Hud {
     /**
      * Info overlay that contains information about: player names, lives, game status, game time.
      *
-     * @param spriteBatch helps sync the rendering process with arena incl. player textures
+     * @param spriteBatch used for rendering all visual elements. Using the same spritebatch as the Arena (players,
+     *                    bullets etc.) helps with scaling and resizing
      */
     public Hud(SpriteBatch spriteBatch) {
         localPLayerId = ServerConnection.getInstance().getClient().getID();
@@ -130,15 +131,14 @@ public class Hud {
 
     private void updateGameStatus(GameStateMessage gameState) {
         if (gameState.isAllPlayersHaveJoined()) {
-            gameStatusLabel.setText(""); // remove "Waiting for other players ..."
+            gameStatusLabel.setText("");  // Remove "Waiting for other players ..."
         }
         for (PlayerState player : gameState.getPlayerStates()) {
             if (player.getId() == localPLayerId && player.getLives() == 0) {
-                gameStatusLabel.getStyle().fontColor = Color.RED;
+                gameStatusLabel.getStyle().fontColor = Color.RED;  // Make displayed game status message red
                 gameStatusLabel.setText("You lost");
-                System.out.println(gameStatusLabel.getColor());
             } else if (player.getId() != localPLayerId && player.getLives() == 0) {
-                gameStatusLabel.getStyle().fontColor = Color.GREEN;
+                gameStatusLabel.getStyle().fontColor = Color.GREEN;  // Make displayed game status message green
                 gameStatusLabel.setText("You won");
             }
         }

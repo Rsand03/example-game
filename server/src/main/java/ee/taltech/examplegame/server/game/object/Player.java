@@ -1,14 +1,22 @@
-package ee.taltech.examplegame.server.game;
+package ee.taltech.examplegame.server.game.object;
 
 import com.esotericsoftware.kryonet.Connection;
+import ee.taltech.examplegame.server.game.GameInstance;
 import ee.taltech.examplegame.server.listener.PlayerMovementListener;
 import ee.taltech.examplegame.server.listener.PlayerShootingListener;
 import lombok.Getter;
 import lombok.Setter;
-import message.Direction;
-import message.PlayerState;
+import message.dto.Direction;
+import message.dto.PlayerState;
 
-import static constant.Constants.*;
+import static constant.Constants.ARENA_LOWER_BOUND_X;
+import static constant.Constants.ARENA_LOWER_BOUND_Y;
+import static constant.Constants.ARENA_UPPER_BOUND_X;
+import static constant.Constants.ARENA_UPPER_BOUND_Y;
+import static constant.Constants.PLAYER_HEIGHT_IN_PIXELS;
+import static constant.Constants.PLAYER_LIVES_COUNT;
+import static constant.Constants.PLAYER_SPEED;
+import static constant.Constants.PLAYER_WIDTH_IN_PIXELS;
 
 /**
  * Server-side representation of a player in the game. This class listens for player movements or shooting actions
@@ -23,7 +31,7 @@ public class Player {
     private final PlayerShootingListener shootingListener = new PlayerShootingListener(this);
 
     private final int id;
-    private final Game game;
+    private final GameInstance game;
     private float x, y = 0f;
     private int lives = PLAYER_LIVES_COUNT;
 
@@ -33,7 +41,7 @@ public class Player {
      * @param connection Connection to client-side.
      * @param game Game instance that this player is a part of.
      */
-    public Player(Connection connection, Game game) {
+    public Player(Connection connection, GameInstance game) {
         this.connection = connection;
         this.id = connection.getID();
         this.game = game;
@@ -46,7 +54,7 @@ public class Player {
      *
      * @param direction The direction in which the player moves.
      */
-    public void move(message.Direction direction) {
+    public void move(Direction direction) {
         if (direction == null) return;
 
         switch (direction) {

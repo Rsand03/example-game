@@ -3,7 +3,7 @@ package ee.taltech.examplegame.server.listener;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
-import ee.taltech.examplegame.server.game.Game;
+import ee.taltech.examplegame.server.game.GameInstance;
 import message.GameJoinMessage;
 
 
@@ -14,7 +14,7 @@ import message.GameJoinMessage;
  * It contains 3 methods that can be overridden to add custom logic
  */
 public class ServerListener extends Listener {
-    private Game game;
+    private GameInstance game;
 
     /**
      * When a client connects to the server, this method is called.
@@ -57,17 +57,14 @@ public class ServerListener extends Listener {
     public void received(Connection connection, Object object) {
         Log.debug("Received message from client (" + connection.getRemoteAddressTCP().getAddress().getHostAddress() + "): " + object.toString());
 
-        // when a GameJoin message is received, the server will add the
-        // connection to a game instance
+        // when a GameJoinMessage is received, the server will add the connection to the game instance
+        // if there is no active instance, a new one is created
         if (object instanceof GameJoinMessage) {
             if (game == null) {
-                game = new Game(this);
-            }
-
-            game.addConnection(connection);
-
-            if (!game.isGameRunning()) {
-                game.start();
+                game = new GameInstance(this, connection);  // Create a new game instance for the first player (connection)
+                game.start();  // Start the Thread, which contains the main game loop
+            } else {
+                game.addConnection(connection);  // Add a second player (connection) if there is enough room in the game
             }
         }
 

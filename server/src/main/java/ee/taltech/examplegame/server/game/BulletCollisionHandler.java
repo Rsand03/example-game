@@ -1,6 +1,8 @@
 package ee.taltech.examplegame.server.game;
 
 import com.esotericsoftware.minlog.Log;
+import ee.taltech.examplegame.server.game.object.Bullet;
+import ee.taltech.examplegame.server.game.object.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -66,6 +68,8 @@ public class BulletCollisionHandler {
 
     /**
      * Constructs a rectangular hitbox for a player based on their position.
+     * A hitbox is essential for detecting collisions between players and bullets.
+     * Only bullets that visually overlap with the player's sprite register as hits.
      */
     private Rectangle constructPlayerHitBox(Player player) {
         return

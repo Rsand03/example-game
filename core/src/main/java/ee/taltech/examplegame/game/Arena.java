@@ -2,7 +2,7 @@ package ee.taltech.examplegame.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ee.taltech.examplegame.util.Sprites;
-import message.BulletState;
+import message.dto.BulletState;
 import message.GameStateMessage;
 
 import java.util.ArrayList;
@@ -16,6 +16,8 @@ import static ee.taltech.examplegame.util.Sprites.taltechMapTexture;
 
 /**
  * Initialize a new Arena, which is responsible for updating and rendering the following: players, bullets, map.
+ * Updating - modifying the inner state of objects (e.g. Player) based on game state messages received from the server.
+ * Rendering - making the (updated) objects visible on the screen.
  */
 public class Arena {
 
@@ -47,21 +49,25 @@ public class Arena {
     }
 
     /**
-     * Render map, players and bullets. This makes them  visible on the screen.
+     * Render map, players and bullets. This makes them visible on the screen.
      *
-     * @param delta       time since last frame
-     * @param spriteBatch used for rendering (and syncing) all visual elements
+     * @param spriteBatch used for rendering (and scaling/resizing) all visual elements
      */
-    public void render(float delta, SpriteBatch spriteBatch) {
-        // render map
+    public void render(SpriteBatch spriteBatch) {
+        renderMap(spriteBatch);
+        renderPlayers(spriteBatch);
+        renderBullets(spriteBatch);
+    }
+
+    private void renderMap(SpriteBatch spriteBatch) {
         spriteBatch.draw(taltechMapTexture, 0, 0, ARENA_UPPER_BOUND_X, ARENA_UPPER_BOUND_Y);
+    }
 
-        // render all players
-        players.forEach(player -> {
-            player.render(delta, spriteBatch);
-        });
+    private void renderPlayers(SpriteBatch spriteBatch) {
+        players.forEach(player -> player.render(spriteBatch));
+    }
 
-        // render all bullets
+    private void renderBullets(SpriteBatch spriteBatch) {
         bullets.forEach(bullet -> {
             spriteBatch.draw(
                 Sprites.bulletTexture,

@@ -1,4 +1,4 @@
-package message;
+package message.dto;
 
 public enum Direction {
     UP,

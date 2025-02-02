@@ -5,6 +5,9 @@ import com.esotericsoftware.kryonet.Listener;
 import ee.taltech.examplegame.game.GameStateManager;
 import message.GameStateMessage;
 
+/**
+ * Listener for handling incoming GameStateMessages from the server.
+ */
 public class GameStateMessageListener extends Listener {
 
     private final GameStateManager gameStateManager;
@@ -14,6 +17,11 @@ public class GameStateMessageListener extends Listener {
         this.gameStateManager = gameStateManager;
     }
 
+    /**
+     * Processes received GameStateMessage objects.
+     * @param connection Connection that sent the message.
+     * @param object Received object (in this case GameStateMessage).
+     */
     @Override
     public void received(Connection connection, Object object) {
         super.received(connection, object);
